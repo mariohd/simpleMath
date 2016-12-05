@@ -1,0 +1,14 @@
+#subtracao, #multiplicacao, #divisao {
+	opacity: .3
+}
+
+#medalhas img {
+	width: 100px;
+	margin-left: 1em;
+}
+
+#medalhas #matematica {
+	display: block;
+    margin: auto auto;
+    width: 150px;
+}
