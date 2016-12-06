@@ -15,6 +15,11 @@
 
 	var successEffect = new Audio('sound/success.mp3');
 
+	var contador = new ClockCounter();
+	var contadorVigente = setInterval(() => {
+		contador.startCronometer('contador_tempo');
+	}, 1000);
+
 	var support = { animations : Modernizr.cssanimations },
 		animEndEventNames = { 'WebkitAnimation' : 'webkitAnimationEnd', 'OAnimation' : 'oAnimationEnd', 'msAnimation' : 'MSAnimationEnd', 'animation' : 'animationend' },
 		animEndEventName = animEndEventNames[ Modernizr.prefixed( 'animation' ) ],
@@ -80,91 +85,92 @@
 			}
 		}
 	}),
-		krisna = new Stack(document.getElementById('stack_krisna'), {
-			infinite : false,
-			onEndStack : () => {
-				var acertos = respostas.subtracao.reduce((a, b) => {return a + b; }, 0);
-				if (acertos >= minimoAcertos) {
-					swal({
-					  title: "Parabéns!",
-					  text: `Você acertou ${acertos * 10}% das questões de subtração!`,
-					  imageUrl: "img/medalhas/subtracao.png",
-					  imageSize: "140x140"
-					}, () => {	
-						successEffect.play();
-						$('html,body').animate({scrollTop: $('#multiplicacao').offset().top}, 750);
-						$('#medalhas').append('<img src="img/medalhas/subtracao.png">');
-						$('#subtracao').animate({
-							opacity: .3
-						});
-						$('#multiplicacao').animate({
-							opacity: 1
-						});
-						permitirMultiplicacao();
+	krisna = new Stack(document.getElementById('stack_krisna'), {
+		infinite : false,
+		onEndStack : () => {
+			var acertos = respostas.subtracao.reduce((a, b) => {return a + b; }, 0);
+			if (acertos >= minimoAcertos) {
+				swal({
+				  title: "Parabéns!",
+				  text: `Você acertou ${acertos * 10}% das questões de subtração!`,
+				  imageUrl: "img/medalhas/subtracao.png",
+				  imageSize: "140x140"
+				}, () => {	
+					successEffect.play();
+					$('html,body').animate({scrollTop: $('#multiplicacao').offset().top}, 750);
+					$('#medalhas').append('<img src="img/medalhas/subtracao.png">');
+					$('#subtracao').animate({
+						opacity: .3
 					});
-				} else {
-					respostas.subtracao = [];
-					krisna.restart();
-					swal("Desculpe!", `Você acertou somente ${acertos * 10}%. \n Necessário acertar mais de 70% para continuar.`, "error");
-				}
+					$('#multiplicacao').animate({
+						opacity: 1
+					});
+					permitirMultiplicacao();
+				});
+			} else {
+				respostas.subtracao = [];
+				krisna.restart();
+				swal("Desculpe!", `Você acertou somente ${acertos * 10}%. \n Necessário acertar mais de 70% para continuar.`, "error");
+			}
 
-			}
-		}),
-		wangi = new Stack(document.getElementById('stack_wangi'), {
-			infinite : false,
-			onEndStack : () => {
-				var acertos = respostas.multiplicacao.reduce((a, b) => {return a + b; }, 0);
-				if (acertos >= minimoAcertos) {
-					swal({
-					  title: "Parabéns!",
-					  text: `Você acertou ${acertos * 10}% das questões de multiplicação!`,
-					  imageUrl: "img/medalhas/multiplicacao.png",
-					  imageSize: "140x140"
-					}, () => {
-						successEffect.play();
-						$('html,body').animate({scrollTop: $('#divisao').offset().top}, 750);
-						$('#medalhas').append('<img src="img/medalhas/multiplicacao.png">');
-						$('#multiplicacao').animate({
-							opacity: .3
-						});
-						$('#divisao').animate({
-							opacity: 1
-						});
-						permitirDivisao();
+		}
+	}),
+	wangi = new Stack(document.getElementById('stack_wangi'), {
+		infinite : false,
+		onEndStack : () => {
+			var acertos = respostas.multiplicacao.reduce((a, b) => {return a + b; }, 0);
+			if (acertos >= minimoAcertos) {
+				swal({
+				  title: "Parabéns!",
+				  text: `Você acertou ${acertos * 10}% das questões de multiplicação!`,
+				  imageUrl: "img/medalhas/multiplicacao.png",
+				  imageSize: "140x140"
+				}, () => {
+					successEffect.play();
+					$('html,body').animate({scrollTop: $('#divisao').offset().top}, 750);
+					$('#medalhas').append('<img src="img/medalhas/multiplicacao.png">');
+					$('#multiplicacao').animate({
+						opacity: .3
 					});
-				} else {
-					respostas.multiplicacao = [];
-					wangi.restart();
-					swal("Desculpe!", `Você acertou somente ${acertos * 10}%. \n Necessário acertar mais de 70% para continuar.`, "error");
-				}
-			}
-		}),
-		wira = new Stack(document.getElementById('stack_wira'), {
-			infinite : false,
-			onEndStack : () => {
-				var acertos = respostas.divisao.reduce((a, b) => {return a + b; }, 0);
-				if (acertos >= minimoAcertos) {
-					swal({
-						title: "Parabéns!",
-						text: "Você concluiu com êxito todos os desafios.",
-						imageUrl: "img/medalhas/matematica.png",
-						imageSize: "140x140"
-					}, () => {
-						successEffect.play();
-						$('#divisao').animate({
-							opacity: .3
-						});
-						$('#medalhas').append('<img src="img/medalhas/divisao.png">');
-						$('#medalhas').append('<img id="matematica" src="img/medalhas/matematica.png">');
-						$('html,body').animate({scrollTop: $('.container').offset().top}, 750);
+					$('#divisao').animate({
+						opacity: 1
 					});
-				} else {
-					respostas.multiplicacao = [];
-					wira.restart();
-					swal("Desculpe!", `Você acertou somente ${acertos * 10}%. \n Necessário acertar mais de 70% para continuar.`, "error");
-				}
+					permitirDivisao();
+				});
+			} else {
+				respostas.multiplicacao = [];
+				wangi.restart();
+				swal("Desculpe!", `Você acertou somente ${acertos * 10}%. \n Necessário acertar mais de 70% para continuar.`, "error");
 			}
-		});
+		}
+	}),
+	wira = new Stack(document.getElementById('stack_wira'), {
+		infinite : false,
+		onEndStack : () => {
+			var acertos = respostas.divisao.reduce((a, b) => {return a + b; }, 0);
+			if (acertos >= minimoAcertos) {
+				clearInterval(contadorVigente);
+				swal({
+					title: "Parabéns!",
+					text: "Você concluiu com êxito todos os desafios. \n" + `Desafios concluídos em ${ contador.min > 0 ? `${contador.min} minutos e ` : '' } ${ contador.seg } segundos`,
+					imageUrl: "img/medalhas/matematica.png",
+					imageSize: "140x140"
+				}, () => {
+					successEffect.play();
+					$('#divisao').animate({
+						opacity: .3
+					});
+					$('#medalhas').append('<img src="img/medalhas/divisao.png">');
+					$('#medalhas').append('<img id="matematica" src="img/medalhas/matematica.png">');
+					$('html,body').animate({scrollTop: $('.container').offset().top}, 750);
+				});
+			} else {
+				respostas.multiplicacao = [];
+				wira.restart();
+				swal("Desculpe!", `Você acertou somente ${acertos * 10}%. \n Necessário acertar mais de 70% para continuar.`, "error");
+			}
+		}
+	});
 
 	var allowNext = true;
 	// controls the click ring effect on the button
