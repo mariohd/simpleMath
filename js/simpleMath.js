@@ -1,9 +1,27 @@
 (function() {
-	var backgroundMusic = new Audio('sound/background.mp3');
+  
+  var backgroundMusic = new Audio('sound/background.mp3');
 	backgroundMusic.addEventListener('ended', function() {
 		this.currentTime = 0;
 		this.play();
 	}, false);
+  
+				function shuffleArray(array) {
+					for (var i = array.length - 1; i > 0; i--) {
+						var j = Math.floor(Math.random() * (i + 1));
+						var temp = array[i];
+						array[i] = array[j];
+						array[j] = temp;
+					}
+					return array;
+				}
+
+				$('#stack_yuda, #stack_krisna, #stack_wangi, #stack_wira').each((e, e1) => {
+					e1 = $(e1);
+					var childrens = e1.children('li').detach().toArray();
+					shuffleArray(childrens);
+					e1.append(childrens);
+				});
 
 	if (! mobilecheck()) {
 		backgroundMusic.play();
